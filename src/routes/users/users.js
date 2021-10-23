@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require('express-validator');
-
 const User = require('../../../models/user/User');
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
 // api/users 
 router.post('/', [
@@ -48,7 +49,23 @@ router.post('/', [
 
         await user.save();
 
-        res.send("User created in MongoDB");
+        // res.send("User created in MongoDB");
+
+        const payload = {
+
+            user: {
+
+                id: user.id
+            }
+        }
+
+        jwt.sign(payload, config.get('jwtSecret'), {
+            expiresIn: 3600000
+        }, (err, token) => {
+
+            
+
+        });
 
     } catch (err) {
         
