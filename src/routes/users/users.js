@@ -33,7 +33,7 @@ router.post('/', [
 
         if (user) {
             
-            return res.status(400).json({ msg: "A User with this email address already exists " });
+            return res.status(400).json({ msg: " A User with this email address already exists " });
         }
 
         user = new User({
@@ -63,7 +63,8 @@ router.post('/', [
             expiresIn: 3600000
         }, (err, token) => {
 
-            
+            if(err) throw err;
+            res.json({ token });
 
         });
 
