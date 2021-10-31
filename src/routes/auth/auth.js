@@ -8,9 +8,19 @@ const router = express.Router();
 const auth = require("../../../middleware/auth");
 
 // api/auth
-router.get('/', (req, res) => {
+router.get('/', auth, async (req, res) => {
 
-    res.send("get Logged in User");
+    // res.send("get Logged in User");
+
+    try {
+
+        const user = await User.findById(req.user.id).select('-password');
+        res.json(user);
+        
+    } catch (err) {
+       console.error(err.message);
+       res.status(500).send("Server Error"); 
+    }
 
 });
 
