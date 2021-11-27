@@ -5,13 +5,52 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';import PropTypes from 'prop-types';
+import MenuIcon from '@mui/icons-material/Menu'; import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import AuthContext from '../../context/auth/authContext';
+import { Fragment } from 'react';
 
 const Navbar = ({ title, icon }) => {
 
-    return (
-        <Box sx={{ flexGrow: 1 }}>
+  const authContext = React.useContext(AuthContext);
+
+  const { isAuthenticated, logout, user } = authContext;
+
+  const onLogout = () => {
+
+    logout();
+  }
+
+  const authLinks = (
+
+    <Fragment>
+      <li>
+        Hello {user && user.name}
+      </li>
+      <li>
+        <a onClick={onLogout} href="!#">
+          <i className="fas fa-sign-out-alt">  </i>
+          <span> logout </span>
+        </a>
+      </li>
+    </Fragment>
+
+  );
+
+  const guestLinks = (
+
+    <Fragment>
+      <Link to="/register">
+        <Button color="inherit"> Register </Button>
+      </Link>
+      <Link to="/login">
+        <Button color="inherit"> Login </Button>
+      </Link>
+    </Fragment>
+  )
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -24,30 +63,27 @@ const Navbar = ({ title, icon }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-             <i className={icon}></i> { title }
+            <i className={icon}></i> {title}
           </Typography>
-          <Link to="/">
-          <Button color="inherit"> Home </Button>
-          </Link>
-          <Link to="/about">
-          <Button color="inherit"> About Us </Button>
-          </Link>
+
+          {isAuthenticated ? authLinks : guestLinks}
+
         </Toolbar>
       </AppBar>
     </Box>
-    )
+  )
 }
 
 Navbar.propTypes = {
 
-    title: PropTypes.string.isRequired,
-    icon: PropTypes.string
+  title: PropTypes.string.isRequired,
+  icon: PropTypes.string
 }
 
 Navbar.defaultProps = {
 
-    title: 'Talverse Community',
-    icon: 'fa fa-id-card-alt'
+  title: 'Talverse Community',
+  icon: 'fa fa-id-card-alt'
 }
 
 export default Navbar;
